@@ -8,16 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
-# First try to find tinyxml2 via catkin (ROS-provided)
-# If not found, try system installation
-find_package(tinyxml2 QUIET)
-if(NOT tinyxml2_FOUND)
-  # Fallback to pkg-config method
-  find_package(PkgConfig REQUIRED)
-  pkg_check_modules(TINYXML2 REQUIRED tinyxml2)
-  set(tinyxml2_INCLUDE_DIRS ${TINYXML2_INCLUDE_DIRS})
-  set(tinyxml2_LIBRARIES ${TINYXML2_LIBRARIES})
-endif()
+find_package(tinyxml2 REQUIRED)
 
 # Enable C++11
 set(CMAKE_CXX_STANDARD 11)
@@ -27,20 +18,18 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS geometry_msgs roscpp std_msgs
-  DEPENDS tinyxml2
 )
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${tinyxml2_INCLUDE_DIRS}
 )
 
 # Add your executable
 add_executable(ysc_control_node src/ysc_control_api.cc src/ysc_control_ros1.cc)
 target_link_libraries(ysc_control_node
   ${catkin_LIBRARIES}
-  ${tinyxml2_LIBRARIES}
+  tinyxml2::tinyxml2
 )
 
 # Install targets
